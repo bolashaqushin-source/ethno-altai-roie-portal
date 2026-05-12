@@ -314,7 +314,14 @@ function Contracts({services,contracts}){
 
       <body>
         <div class="toolbar">
-          <button onclick="window.print()">PDF сақтау / басып шығару</button>
+          <button onclick="
+window.print();
+setTimeout(()=>{
+  alert('Телефонда: Поделиться → Сохранить в PDF таңдаңыз');
+},500);
+">
+PDF сақтау
+</button>
         </div>
 
         <main class="page">
