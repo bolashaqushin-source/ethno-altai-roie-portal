@@ -348,7 +348,7 @@ PDF сақтау
             <div>
               <b>Ұйымдастырушы:</b>
               <img
-  src="https://ibb.co.com/mV954N37"
+  src="./signature.PNG"
   style="
     width:180px;
     height:auto;
