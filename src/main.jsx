@@ -145,7 +145,214 @@ function Contracts({services,contracts}){
  const s=services.find(x=>x.id===selected)
  function makeText(service){const t=settings?.template||'';return t.replaceAll('{{client_name}}',service.client_name||'').replaceAll('{{phone}}',service.phone||'').replaceAll('{{service_name}}',service.service_name||'').replaceAll('{{date_from}}',service.date_from||'').replaceAll('{{date_to}}',service.date_to||'').replaceAll('{{total_price}}',money(service.total_price)).replaceAll('{{paid}}',money(service.paid)).replaceAll('{{rest}}',money(service.rest))}
  async function createContract(){if(!s)return alert('Услуга таңда');await contracts.insert({service_id:s.id,contract_no:contractNo(s),client_name:s.client_name,phone:s.phone,contract_text:makeText(s),status:'Дайындалды'})}
- function print(c){const w=window.open('','_blank');w.document.write(`<html><head><title>${c.contract_no}</title><style>body{font-family:Arial;padding:40px;line-height:1.6}.box{border:1px solid #222;padding:16px;border-radius:8px}.sign{display:grid;grid-template-columns:1fr 1fr;gap:50px;margin-top:40px}@media print{button{display:none}}</style></head><body><button onclick="window.print()">PDF сақтау</button><h1>ETHNO ALTAI ДОГОВОР</h1><h2>${c.contract_no||''}</h2><div class="box">${(c.contract_text||'').replaceAll('\n','<br/>')}</div><div class="sign"><div>Клиент қолы:<br/><br/>________________</div><div>Ұйымдастырушы:<br/><br/>________________</div></div></body></html>`)}
+ function print(c){
+  const w=window.open('','_blank')
+  w.document.write(`
+    <html>
+      <head>
+        <title>${c.contract_no || 'Ethno Altai договор'}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+          @page{
+            size:A4;
+            margin:18mm;
+          }
+
+          *{
+            box-sizing:border-box;
+          }
+
+          body{
+            margin:0;
+            background:#f4f0e7;
+            font-family:Arial, sans-serif;
+            color:#111;
+            line-height:1.55;
+          }
+
+          .toolbar{
+            position:sticky;
+            top:0;
+            background:#111;
+            color:white;
+            padding:10px;
+            display:flex;
+            gap:8px;
+            justify-content:center;
+            z-index:10;
+          }
+
+          .toolbar button{
+            border:0;
+            border-radius:10px;
+            background:#f4d84f;
+            padding:10px 14px;
+            font-weight:700;
+            cursor:pointer;
+          }
+
+          .page{
+            width:210mm;
+            min-height:297mm;
+            margin:18px auto;
+            background:white;
+            padding:24mm 20mm;
+            box-shadow:0 20px 60px rgba(0,0,0,.16);
+          }
+
+          .top{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            border-bottom:2px solid #111;
+            padding-bottom:14px;
+            margin-bottom:20px;
+          }
+
+          h1{
+            margin:0;
+            font-size:26px;
+            letter-spacing:.5px;
+          }
+
+          .no{
+            margin-top:8px;
+            font-size:16px;
+            font-weight:700;
+          }
+
+          .brand{
+            text-align:right;
+            font-size:12px;
+            color:#555;
+          }
+
+          .box{
+            border:1.5px solid #111;
+            padding:16px;
+            border-radius:8px;
+            font-size:14px;
+            white-space:pre-wrap;
+          }
+
+          .sign{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:60px;
+            margin-top:46px;
+            font-size:14px;
+          }
+
+          .line{
+            margin-top:36px;
+            border-bottom:1.5px solid #111;
+            height:1px;
+          }
+
+          .footer{
+            margin-top:40px;
+            font-size:11px;
+            color:#777;
+            text-align:center;
+          }
+
+          @media(max-width:760px){
+            body{
+              background:white;
+            }
+
+            .page{
+              width:100%;
+              min-height:auto;
+              margin:0;
+              padding:22px 18px 80px;
+              box-shadow:none;
+            }
+
+            .top{
+              display:block;
+            }
+
+            .brand{
+              text-align:left;
+              margin-top:10px;
+            }
+
+            h1{
+              font-size:23px;
+            }
+
+            .box{
+              font-size:13px;
+            }
+
+            .sign{
+              grid-template-columns:1fr;
+              gap:28px;
+            }
+          }
+
+          @media print{
+            body{
+              background:white;
+            }
+
+            .toolbar{
+              display:none;
+            }
+
+            .page{
+              margin:0;
+              box-shadow:none;
+              width:auto;
+              min-height:auto;
+              padding:0;
+            }
+          }
+        </style>
+      </head>
+
+      <body>
+        <div class="toolbar">
+          <button onclick="window.print()">PDF сақтау / басып шығару</button>
+        </div>
+
+        <main class="page">
+          <div class="top">
+            <div>
+              <h1>ETHNO ALTAI ДОГОВОР</h1>
+              <div class="no">${c.contract_no || ''}</div>
+            </div>
+
+            <div class="brand">
+              Ethno Altai<br/>
+              Катонқарағай туристік қызметі
+            </div>
+          </div>
+
+          <div class="box">${(c.contract_text || '').replaceAll('<','&lt;').replaceAll('>','&gt;')}</div>
+
+          <div class="sign">
+            <div>
+              <b>Турист қолы:</b>
+              <div class="line"></div>
+            </div>
+
+            <div>
+              <b>Ұйымдастырушы:</b>
+              <div class="line"></div>
+            </div>
+          </div>
+
+          <div class="footer">
+            Бұл құжат Ethno Altai туристік қызметін броньдау/ұйымдастыру үшін жасалды.
+          </div>
+        </main>
+      </body>
+    </html>
+  `)
+  w.document.close()
+}
  async function saveSettings(e){e.preventDefault();const{error}=await supabase.from('ea_contract_settings').upsert({...settings,id:1,updated_at:new Date().toISOString()});if(error)alert(error.message);else alert('Шаблон сақталды')}
  return <div><div className='card'><h2>Договор шаблон</h2>{settings&&<form className='form' onSubmit={saveSettings}><Field label='Компания' value={settings.company_name||''} onChange={v=>setSettings({...settings,company_name:v})}/><Field label='Телефон' value={settings.phone||''} onChange={v=>setSettings({...settings,phone:v})}/><Field label='Kaspi' value={settings.kaspi||''} onChange={v=>setSettings({...settings,kaspi:v})}/><Field label='Мекенжай' value={settings.address||''} onChange={v=>setSettings({...settings,address:v})}/><Text label='Толық договор шаблоны' value={settings.template||''} onChange={v=>setSettings({...settings,template:v})}/><div className='wide'><button className='primary'>Шаблон сақтау</button></div></form>}</div><div className='card'><h2>Договор жасау</h2><label>Услуга таңда<select value={selected} onChange={e=>setSelected(e.target.value)}><option value=''>Таңдау</option>{services.map(s=><option value={s.id} key={s.id}>{s.client_name} — {s.service_name} — {s.date_from}</option>)}</select></label>{s&&<div className='preview'><h3>Preview</h3><p>{makeText(s)}</p><button className='primary' onClick={createContract}>Договор сақтау</button><a target='_blank' href={wa(s.phone,`Сәлем, ${s.client_name}! Договор PDF дайын. Тексеріп шығыңыз.`)}>WhatsApp текст</a></div>}</div><div className='card'><h2>Договорлар</h2><Table rows={contracts.rows} cols={['contract_no','client_name','phone','status','sent_whatsapp']} actions={r=><><button onClick={()=>print(r)}>PDF</button><a target='_blank' href={wa(r.phone,`Сәлем, ${r.client_name}! Договор PDF жіберілді. Растап жіберіңіз.`)}>WA</a><button onClick={()=>contracts.remove(r.id)}>Өшір</button></>}/></div></div>
 }
