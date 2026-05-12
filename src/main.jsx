@@ -348,7 +348,7 @@ PDF сақтау
             <div>
               <b>Ұйымдастырушы:</b>
               <img
-  src="/12345.jpg"
+  src="12345.jpg"
   style="
     width:180px;
     height:auto;
