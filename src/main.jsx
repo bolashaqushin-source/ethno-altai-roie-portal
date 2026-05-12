@@ -348,7 +348,7 @@ PDF сақтау
             <div>
               <b>Ұйымдастырушы:</b>
               <img
-  src="./signature.PNG"
+  src="12345.img"
   style="
     width:180px;
     height:auto;
